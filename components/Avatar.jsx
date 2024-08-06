@@ -14,12 +14,6 @@ const Avatar = ({
 }) => {
   return (
     <View>
-      {/* <Icon
-        name="user"
-        size={hp(3.2)}
-        strokeWidth={2}
-        color={theme.colors.text}
-      /> */}
       <Image
         source={getUserImageSrc(uri)}
         transition={100}

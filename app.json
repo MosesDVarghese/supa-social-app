@@ -4,11 +4,11 @@
     "slug": "supa-social-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/welcome.png",
+    "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/welcome.png",
+      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,14 +17,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/welcome.png",
+        "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/welcome.png"
+      "favicon": "./assets/images/favicon.png"
     },
     "plugins": ["expo-router"],
     "experiments": {
