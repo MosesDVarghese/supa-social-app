@@ -3,9 +3,12 @@ Make sure to install webview v11:
 This will give you the following uncaught error:
 `Cannot read property 'startLoadWithResult' of null`
 
-To fix this, look for the file `WebView.ios.js` in `node-modules/react-native-webview/`
+To fix this, look for the file `WebView.ios.js` in `node_modules/react-native-webview/lib/`
 
-Then below check the line labeled with a comment "HERE". Comment out this line in your project.
+Then comment out the following line:
+`viewManager.startLoadWithResult(!!shouldStart, lockIdentifier);`
+
+The line is also labeled with a comment "HERE" below.
 
 ```javascript
 var __awaiter =
