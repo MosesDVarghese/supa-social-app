@@ -1,4 +1,4 @@
-Make sure to install webview v11:
+Install webview v11:
 
 This will give you the following uncaught error:
 `Cannot read property 'startLoadWithResult' of null`

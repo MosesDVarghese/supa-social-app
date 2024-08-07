@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-webview/lib/WebView.ios.js b/node_modules/react-native-webview/lib/WebView.ios.js
+index 490392c..2c9a537 100644
+--- a/node_modules/react-native-webview/lib/WebView.ios.js
++++ b/node_modules/react-native-webview/lib/WebView.ios.js
+@@ -83,7 +83,7 @@ var WebViewComponent = forwardRef(function (_a, ref) {
+         if (lockIdentifier === void 0) { lockIdentifier = 0; }
+         var viewManager = (nativeConfig === null || nativeConfig === void 0 ? void 0 : nativeConfig.viewManager)
+             || RNCWebViewManager;
+-        viewManager.startLoadWithResult(!!shouldStart, lockIdentifier);
++        // viewManager.startLoadWithResult(!!shouldStart, lockIdentifier);
+     }, [nativeConfig === null || nativeConfig === void 0 ? void 0 : nativeConfig.viewManager]);
+     var _j = useWebWiewLogic({
+         onNavigationStateChange: onNavigationStateChange,
