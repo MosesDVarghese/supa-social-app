@@ -12,6 +12,7 @@ const RichTextEditor = ({ editorRef, onChange }) => {
     <View style={{ minHeight: 285 }}>
       <RichToolbar
         actions={[
+          actions.keyboard,
           actions.setStrikethrough,
           actions.removeFormat,
           actions.insertImage,
@@ -26,14 +27,13 @@ const RichTextEditor = ({ editorRef, onChange }) => {
           actions.line,
           actions.heading1,
           actions.heading4,
+          actions.undo,
+          actions.redo,
           //   actions.insertBulletsList,
           //   actions.insertLink,
-          //   actions.keyboard,
           //   actions.setUnderline,
           //   actions.insertVideo,
           //   actions.checkboxList,
-          //   actions.undo,
-          //   actions.redo,
         ]}
         iconMap={{
           [actions.heading1]: ({ tintColor }) => (
