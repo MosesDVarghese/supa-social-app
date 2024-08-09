@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   Pressable,
+  Alert,
 } from "react-native";
 import React, { useRef, useState } from "react";
 import ScreenWrapper from "../../components/ScreenWrapper";
@@ -21,6 +22,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
 import { getSupabaseFileUrl } from "../../services/imageService";
 import { Video } from "expo-av";
+import { createOrUpdatePost } from "../../services/postService";
 
 const NewPost = () => {
   const { user } = useAuth();
@@ -30,7 +32,7 @@ const NewPost = () => {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
-  const [file, setFile] = useState(file);
+  const [file, setFile] = useState(null);
 
   const onPick = async (isImage) => {
     let mediaConfig = {
@@ -92,6 +94,32 @@ const NewPost = () => {
   const onSubmit = async () => {
     console.log("\n");
     console.log(editorRef);
+
+    if (!bodyRef.current && !file) {
+      Alert.alert("Post", "Please choose an image or add post body.");
+      return;
+    }
+
+    let data = {
+      file,
+      body: bodyRef.current,
+      userId: user?.id,
+    };
+
+    // create post
+    setLoading(true);
+    let res = await createOrUpdatePost(data);
+    setLoading(false);
+    console.log("post res: ", res);
+
+    if (res.success) {
+      setFile(null);
+      bodyRef.current = "";
+      editorRef.current?.setContentHTML("");
+      router.back();
+    } else {
+      Alert.alert("Post", res.msg);
+    }
   };
 
   return (
