@@ -4,6 +4,10 @@ This is a project to create a Social Media mobile application using React Native
 
 Tools Used: React Native, Expo Go, Supabase
 
+TODO:
+
+- instructions for supabase setup
+
 ## Demo Images
 
 ### Welcome Screen
