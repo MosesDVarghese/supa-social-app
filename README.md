@@ -1,3 +1,27 @@
+# Social Media App with Expo Go and Supabase
+
+This is a project to create a Social Media mobile application using React Native with complete user authentication.App features full CRUD functionality: edit user profile, create post with caption and / or photo or video, commenting on posts. The create post function features rich text editor, allowing for text styling, resizing, alignment, undo and redo functionality, enabling users for expressive and engaging posts.
+
+Tools Used: React Native, Expo Go, Supabase
+
+## Demo Images
+
+### Welcome Screen
+
+<img src="assets/screenshots/welcome.PNG" width="200" />
+
+### Sign in / Sign in Screens
+
+<img src="assets/screenshots/signin.PNG" width="200" /> <img src="assets/screenshots/signup.PNG" width="200" />
+
+### Profile | Edit Profile Screens
+
+<img src="assets/screenshots/profile.PNG" width="200" /> <img src="assets/screenshots/editprofile.PNG" width="200" />
+
+### Create Post Screen
+
+<img src="assets/screenshots/createpost1.PNG" width="200" /> <img src="assets/screenshots/createpost2.PNG" width="200" /> <img src="assets/screenshots/createpost3.PNG" width="200" />
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
