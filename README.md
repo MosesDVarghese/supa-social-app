@@ -4,10 +4,6 @@ This is a project to create a Social Media mobile application using React Native
 
 Tools Used: React Native, Expo Go, Supabase
 
-TODO:
-
-- instructions for supabase setup
-
 ## Demo Images
 
 ### Welcome Screen
@@ -17,6 +13,10 @@ TODO:
 ### Sign in / Sign in Screens
 
 <img src="assets/screenshots/signin.PNG" width="200" /> <img src="assets/screenshots/signup.PNG" width="200" />
+
+### Home Screen
+
+<img src="assets/screenshots/home.PNG" width="200" />
 
 ### Profile | Edit Profile Screens
 
