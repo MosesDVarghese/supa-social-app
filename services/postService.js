@@ -13,20 +13,18 @@ export const createOrUpdatePost = async (post) => {
       } else {
         return fileRes;
       }
-
-      const { data, error } = await supabase
-        .from("posts")
-        .upsert(post)
-        .select()
-        .single();
-
-      if (error) {
-        console.log("createPost error: ", error);
-        return { success: false, msg: "Could not create post" };
-      }
-
-      return { success: true, data: data };
     }
+    const { data, error } = await supabase
+      .from("posts")
+      .upsert(post)
+      .select()
+      .single();
+    if (error) {
+      console.log("createPost error: ", error);
+      return { success: false, msg: "Could not create post" };
+    }
+
+    return { success: true, data: data };
   } catch (error) {
     console.log("createPost error: ", error);
     return { success: false, msg: "Could not create post" };
