@@ -108,6 +108,9 @@ const Home = () => {
           renderItem={({ item }) => (
             <PostCard item={item} currentUser={user} router={router} />
           )}
+          onEndReached={() => {
+            console.log("got to the end");
+          }}
           ListFooterComponent={
             <View style={{ marginVertical: posts.length == 0 ? 200 : 30 }}>
               <Loading />
