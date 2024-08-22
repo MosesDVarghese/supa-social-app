@@ -11,6 +11,10 @@ export const hp = (percentage) => {
   return (percentage * height) / 100;
 };
 
+export const stripHtmlTags = (html) => {
+  return html.replace(/<[^>]*>?/gm, "");
+};
+
 export const getColumnCount = () => {
   if (deviceWidth >= 1024) {
     // desktop

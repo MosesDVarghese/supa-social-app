@@ -27,6 +27,7 @@ const Home = () => {
   const router = useRouter();
 
   const [posts, setPosts] = useState([]);
+  const [noMore, setNoMore] = useState(false);
 
   const handlePostEvent = async (payload) => {
     if (payload.eventType == "INSERT" && payload?.new?.id) {
@@ -47,8 +48,6 @@ const Home = () => {
       )
       .subscribe();
 
-    getPosts();
-
     return () => {
       supabase.removeChannel(postChannel);
     };
@@ -56,9 +55,17 @@ const Home = () => {
 
   const getPosts = async () => {
     // call the api
-    limit += 10;
+    if (noMore) {
+      console.log("all posts fetched");
+      return null;
+    }
+    limit = limit + 4;
+    // fetching posts
     let res = await fetchPosts(limit);
     if (res.success) {
+      if (posts.length == res.data.length) {
+        setNoMore(true);
+      }
       setPosts(res.data);
     }
     // console.log(res.data[0].user);
@@ -109,16 +116,23 @@ const Home = () => {
             <PostCard item={item} currentUser={user} router={router} />
           )}
           onEndReached={() => {
+            getPosts();
             console.log("got to the end");
           }}
+          onEndReachedThreshold={0}
           ListFooterComponent={
-            <View style={{ marginVertical: posts.length == 0 ? 200 : 30 }}>
-              <Loading />
-            </View>
+            noMore ? (
+              <View style={{ marginVertical: 30, bottom: 20 }}>
+                <Text style={styles.noPosts}>No more posts</Text>
+              </View>
+            ) : (
+              <View style={{ marginVertical: posts.length == 0 ? 200 : 30 }}>
+                <Loading />
+              </View>
+            )
           }
         />
       </View>
-      {/* <Button title="logout" onPress={onLogout} /> */}
     </ScreenWrapper>
   );
 };

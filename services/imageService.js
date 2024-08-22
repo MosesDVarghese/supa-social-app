@@ -44,6 +44,21 @@ export const uploadFile = async (folderName, fileUri, isImage = true) => {
   }
 };
 
+export const downloadFile = async (url) => {
+  try {
+    const { uri } = await FileSystem.downloadAsync(url, getLocalFilePath(url));
+    return uri;
+  } catch (error) {
+    console.log("failed to upload error: ", error);
+    return { success: false, msg: "Could not upload media" };
+  }
+};
+
+export const getLocalFilePath = (filePath) => {
+  let fileName = filePath.split("/").pop();
+  return `${FileSystem.documentDirectory}${fileName}`;
+};
+
 export const getFilePath = (folderName, isImage) => {
   return `/${folderName}/${new Date().getTime()}${isImage ? ".png" : ".mp4"}`;
 };
