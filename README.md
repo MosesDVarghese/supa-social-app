@@ -10,7 +10,7 @@ Tools Used: React Native, Expo Go, Supabase
 
 <img src="assets/screenshots/welcome.PNG" width="200" />
 
-### Sign in / Sign in Screens
+### Sign in / Sign up Screens
 
 <img src="assets/screenshots/signin.PNG" width="200" /> <img src="assets/screenshots/signup.PNG" width="200" />
 
