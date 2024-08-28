@@ -28,6 +28,7 @@ const Home = () => {
 
   const [posts, setPosts] = useState([]);
   const [noMore, setNoMore] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(0);
 
   const handlePostEvent = async (payload) => {
     if (payload.eventType == "INSERT" && payload?.new?.id) {
@@ -35,6 +36,12 @@ const Home = () => {
       let res = await getUserData(newPost.userId);
       newPost.user = res.success ? res.data : {};
       setPosts((prevPosts) => [newPost, ...prevPosts]);
+    }
+  };
+
+  const handleNewNotification = async (payload) => {
+    if (payload.eventType == "INSERT" && payload.new.id) {
+      setNotificationCount((prev) => prev + 1);
     }
   };
 
@@ -48,8 +55,23 @@ const Home = () => {
       )
       .subscribe();
 
+    let notificationChannel = supabase
+      .channel("notifications")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "notifications",
+          filter: `receiverId=eq.${user.id}`,
+        },
+        handleNewNotification
+      )
+      .subscribe();
+
     return () => {
       supabase.removeChannel(postChannel);
+      supabase.removeChannel(notificationChannel);
     };
   }, []);
 
@@ -68,8 +90,6 @@ const Home = () => {
       }
       setPosts(res.data);
     }
-    // console.log(res.data[0].user);
-    // console.log("got post result: ", res);
   };
 
   return (
@@ -79,13 +99,23 @@ const Home = () => {
         <View style={styles.header}>
           <Text style={styles.title}>LinkUp</Text>
           <View style={styles.icons}>
-            <Pressable onPress={() => router.push("notifications")}>
+            <Pressable
+              onPress={() => {
+                setNotificationCount(0);
+                router.push("notifications");
+              }}
+            >
               <Icon
                 name="heart"
                 size={hp(3.2)}
                 strokeWidth={2}
                 color={theme.colors.text}
               />
+              {notificationCount > 0 && (
+                <View style={styles.pill}>
+                  <Text style={styles.pillText}>{notificationCount}</Text>
+                </View>
+              )}
             </Pressable>
             <Pressable onPress={() => router.push("newPost")}>
               <Icon

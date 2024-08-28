@@ -22,9 +22,10 @@ import Input from "../../components/Input";
 import Icon from "../../assets/icons";
 import CommentCard from "../../components/CommentCard";
 import { supabase } from "../../lib/supabase";
+import { createNotification } from "../../services/notificationService";
 
 const PostDetails = () => {
-  const { postId } = useLocalSearchParams();
+  const { postId, commentId } = useLocalSearchParams();
   const { user } = useAuth();
   const router = useRouter();
   const [startLoading, setStartLoading] = useState(true);
@@ -115,7 +116,20 @@ const PostDetails = () => {
     let res = await createComment(data);
     setLoading(false);
     if (res.success) {
-      // send notification later
+      // notify on new comment (ensure commenter and poster are different)
+      if (user.id != post.userId) {
+        // send notification
+        let notify = {
+          senderId: user.id,
+          receiverId: post.userId,
+          title: "commented on your post",
+          data: JSON.stringify({
+            postId: post.id,
+            commentId: res?.data?.id,
+          }),
+        };
+        createNotification(notify);
+      }
       inputRef?.current.clear();
       commentRef.current = "";
     } else {
@@ -180,14 +194,13 @@ const PostDetails = () => {
 
         {/* comment list */}
         <View style={{ gap: 17, marginVertical: 15 }}>
-          {post?.comments?.map((comment) => (
+          {post?.comments?.map((item) => (
             <CommentCard
-              key={comment?.id?.toString()}
-              canDelete={
-                comment.userId === user?.id || user?.id === post.userId
-              }
-              comment={comment}
+              key={item?.id?.toString()}
+              comment={item}
               onDelete={onDeleteComment}
+              canDelete={item.userId === user?.id || user?.id === post.userId}
+              highlight={item.id == commentId}
             />
           ))}
 

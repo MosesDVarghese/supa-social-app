@@ -8,7 +8,12 @@ import Icon from "../assets/icons";
 import { theme } from "../constants/theme";
 import { hp } from "../helpers/common";
 
-const CommentCard = ({ canDelete = false, comment, onDelete }) => {
+const CommentCard = ({
+  canDelete = false,
+  comment,
+  onDelete,
+  highlight = false,
+}) => {
   const handleDelete = () => {
     Alert.alert("Confirm", "Are you sure you want to do this?", [
       {
@@ -28,7 +33,7 @@ const CommentCard = ({ canDelete = false, comment, onDelete }) => {
     <View style={styles.container}>
       <Avatar uri={comment?.user?.image} />
 
-      <View style={styles.content}>
+      <View style={[styles.content, highlight && styles.highlight]}>
         <View
           style={{
             flexDirection: "row",
