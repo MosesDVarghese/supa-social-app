@@ -16,15 +16,27 @@ Tools Used: React Native, Expo Go, Supabase
 
 ### Home Screen
 
-<img src="assets/screenshots/home.PNG" width="200" />
+<img src="assets/screenshots/home1.PNG" width="200" /> <img src="assets/screenshots/home2.PNG" width="200" /> <img src="assets/screenshots/home3.PNG" width="200" />
 
 ### Profile | Edit Profile Screens
 
-<img src="assets/screenshots/profile.PNG" width="200" /> <img src="assets/screenshots/editprofile.PNG" width="200" />
+<img src="assets/screenshots/profile1.PNG" width="200" /> <img src="assets/screenshots/profile2.PNG" width="200" /> <img src="assets/screenshots/editprofile1.PNG" width="200" /> <img src="assets/screenshots/editprofile2.PNG" width="200" />
 
 ### Create Post Screen
 
 <img src="assets/screenshots/createpost1.PNG" width="200" /> <img src="assets/screenshots/createpost2.PNG" width="200" /> <img src="assets/screenshots/createpost3.PNG" width="200" />
+
+### Post Details Modal
+
+<img src="assets/screenshots/postmodal1.PNG" width="200" />
+
+### Commenting
+
+<img src="assets/screenshots/comment1.PNG" width="200" /> <img src="assets/screenshots/comment2.PNG" width="200" /> <img src="assets/screenshots/comment3.PNG" width="200" /> <img src="assets/screenshots/comment4.PNG" width="200" /> <img src="assets/screenshots/comment5.PNG" width="200" />
+
+### Notifications Screen
+
+<img src="assets/screenshots/notification1.PNG" width="200" /> <img src="assets/screenshots/notification2.PNG" width="200" /> <img src="assets/screenshots/notification3.PNG" width="200" />
 
 # Welcome to your Expo app 👋
 
