@@ -5,8 +5,9 @@ import {
   TouchableOpacity,
   Alert,
   Pressable,
+  FlatList,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ScreenWrapper from "../../components/ScreenWrapper";
 import Header from "../../components/Header";
 import { useAuth } from "../../contexts/AuthContext";
@@ -16,10 +17,63 @@ import Icon from "../../assets/icons";
 import { theme } from "../../constants/theme";
 import { supabase } from "../../lib/supabase";
 import Avatar from "../../components/Avatar";
+import { fetchUserPosts } from "../../services/postService";
+import PostCard from "../../components/PostCard";
+import Loading from "../../components/Loading";
 
+var limit = 0;
 const Profile = () => {
   const { user, setAuth } = useAuth();
   const router = useRouter();
+
+  const [posts, setPosts] = useState([]);
+  const [noMore, setNoMore] = useState(false);
+
+  const handlePostEvent = async (payload) => {
+    if (payload.eventType == "INSERT" && payload?.new?.id) {
+      let newPost = { ...payload.new };
+      let res = await getUserData(newPost.userId);
+      newPost.user = res.success ? res.data : {};
+      setPosts((prevPosts) => [newPost, ...prevPosts]);
+    }
+  };
+
+  useEffect(() => {
+    let postChannel = supabase
+      .channel("posts")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "posts",
+          filter: `userId=eq.${user.id}`,
+        },
+        handlePostEvent
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(postChannel);
+    };
+  }, []);
+
+  const getPosts = async () => {
+    // call the api
+    if (noMore) {
+      console.log("all posts fetched");
+      return null;
+    }
+    limit = limit + 4;
+    // fetching posts
+    let res = await fetchUserPosts(user.id, limit);
+    if (res.success) {
+      if (posts.length == res.data.length) {
+        setNoMore(true);
+      }
+      setPosts(res.data);
+    }
+  };
 
   const onLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -47,62 +101,100 @@ const Profile = () => {
 
   return (
     <ScreenWrapper bg="white">
-      <UserHeader user={user} router={router} handleLogout={handleLogout} />
-    </ScreenWrapper>
-  );
-};
-
-const UserHeader = ({ user, router, handleLogout }) => {
-  return (
-    <View
-      style={{ flex: 1, backgroundColor: "white", paddingHorizontal: wp(4) }}
-    >
-      <View>
-        <Header title="Profile" mb={30} />
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Icon name="logout" color={theme.colors.rose} />
-        </TouchableOpacity>
-      </View>
-
       <View style={styles.container}>
-        <View style={{ gap: 15 }}>
-          <View style={styles.avatarContainer}>
-            <Avatar
-              uri={user?.image}
-              size={hp(12)}
-              rounded={theme.radius.xxl * 1.4}
-            />
-            <Pressable
-              style={styles.editIcon}
-              onPress={() => router.push("editProfile")}
+        {/* header */}
+        <View style={{ paddingHorizontal: wp(4) }}>
+          <View>
+            <Header title="Profile" mb={30} />
+            <TouchableOpacity
+              style={styles.logoutButton}
+              onPress={handleLogout}
             >
-              <Icon name="edit" strokeWidth={2.5} size={20} />
-            </Pressable>
-          </View>
-
-          {/* username and address */}
-          <View style={{ alignItems: "center", gap: 4 }}>
-            <Text style={styles.userName}>{user?.name}</Text>
-            <Text style={styles.address}>{user?.address}</Text>
-          </View>
-
-          {/* email, phone, bio */}
-          <View style={{ gap: 10 }}>
-            <View style={styles.info}>
-              <Icon name="mail" size={20} color={theme.colors.textLight} />
-              <Text style={styles.infoText}>{user?.email}</Text>
-            </View>
-            {user?.phoneNumber && (
-              <View style={styles.info}>
-                <Icon name="call" size={20} color={theme.colors.textLight} />
-                <Text style={styles.infoText}>{user?.phoneNumber}</Text>
-              </View>
-            )}
-            {user?.bio && <Text style={styles.infoText}>{user?.bio}</Text>}
+              <Icon name="logout" color={theme.colors.rose} />
+            </TouchableOpacity>
           </View>
         </View>
+
+        {/* user info + posts */}
+        <View style={styles.container}>
+          <FlatList
+            data={posts}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={[styles.listStyle, { marginBottom: 10 }]}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <PostCard item={item} currentUser={user} router={router} />
+            )}
+            onEndReached={() => {
+              getPosts();
+              console.log("got to the end");
+            }}
+            onEndReachedThreshold={0}
+            ListHeaderComponent={
+              <View style={styles.container}>
+                <View style={{ gap: 15, marginBottom: 20 }}>
+                  <View style={styles.avatarContainer}>
+                    <Avatar
+                      uri={user?.image}
+                      size={hp(12)}
+                      rounded={theme.radius.xxl * 1.4}
+                    />
+                    <Pressable
+                      style={styles.editIcon}
+                      onPress={() => router.push("editProfile")}
+                    >
+                      <Icon name="edit" strokeWidth={2.5} size={20} />
+                    </Pressable>
+                  </View>
+
+                  {/* username and address */}
+                  <View style={{ alignItems: "center", gap: 4 }}>
+                    <Text style={styles.userName}>{user?.name}</Text>
+                    <Text style={styles.address}>{user?.address}</Text>
+                  </View>
+
+                  {/* email, phone, bio */}
+                  <View style={{ gap: 10 }}>
+                    <View style={styles.info}>
+                      <Icon
+                        name="mail"
+                        size={20}
+                        color={theme.colors.textLight}
+                      />
+                      <Text style={styles.infoText}>{user?.email}</Text>
+                    </View>
+                    {user?.phoneNumber && (
+                      <View style={styles.info}>
+                        <Icon
+                          name="call"
+                          size={20}
+                          color={theme.colors.textLight}
+                        />
+                        <Text style={styles.infoText}>{user?.phoneNumber}</Text>
+                      </View>
+                    )}
+                    {user?.bio && (
+                      <Text style={styles.infoText}>{user?.bio}</Text>
+                    )}
+                  </View>
+                </View>
+              </View>
+            }
+            ListFooterComponent={
+              noMore ? (
+                <View style={{ marginVertical: 30, bottom: 20 }}>
+                  <Text style={styles.noPosts}>No more posts</Text>
+                </View>
+              ) : (
+                <View style={{ marginVertical: posts.length == 0 ? 20 : 30 }}>
+                  <Loading />
+                </View>
+              )
+            }
+          />
+        </View>
       </View>
-    </View>
+    </ScreenWrapper>
   );
 };
 
@@ -161,8 +253,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fee2e2",
   },
   listStyle: {
+    paddingBottom: 20,
     paddingHorizontal: wp(4),
-    paddingBottom: 30,
   },
   noPosts: {
     fontSize: hp(2),
